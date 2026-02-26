@@ -4,6 +4,9 @@ import { useState } from 'react'
 export default function Stories() {
   return (
     <div className="min-h-screen p-8" style={{backgroundImage: 'linear-gradient(rgba(255,105,180,0.3), rgba(255,20,147,0.3)), url(/images/Stories Page.jpg)', backgroundSize: 'cover'}}>
+      <div className="absolute top-20 left-10 w-24">
+        <img src="/flamingo-meme.svg" alt="flamingo" />
+      </div>
       <div className="container mx-auto">
         <h1 className="text-5xl font-black text-white text-center mb-4 drop-shadow-lg">THAT'S ILLEGAL!</h1>
         <p className="text-3xl text-yellow-300 text-center mb-8 font-bold">Share Your Stories</p>
