@@ -4,8 +4,9 @@ export default function Home() {
       className="min-h-screen flex items-center justify-center"
       style={{
         backgroundImage: `url(/images/Main%20Landing%20Page.jpg)`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
       }}
     >
       <div className="text-center p-8">

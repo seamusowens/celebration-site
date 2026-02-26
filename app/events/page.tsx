@@ -18,7 +18,7 @@ export default function Events() {
   }
   
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center bottom'}}>
+    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'contain', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}>
       <div className="container mx-auto">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">🎉 Celebrations of Life 🎉</h1>
         
