@@ -15,3 +15,9 @@ export async function POST(request: Request) {
   })
   return NextResponse.json(picture)
 }
+
+export async function DELETE(request: Request) {
+  const { id } = await request.json()
+  await prisma.picture.delete({ where: { id } })
+  return NextResponse.json({ success: true })
+}

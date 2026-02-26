@@ -18,8 +18,9 @@ export default function Events() {
   }
   
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
-      <div className="container mx-auto">
+    <div className="min-h-screen bg-gray-900 p-4">
+      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+        <div className="container mx-auto p-8">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">🎉 Celebrations of Life 🎉</h1>
         
         <div className="grid md:grid-cols-2 gap-8 mb-8">
@@ -48,6 +49,7 @@ export default function Events() {
           </div>
         )}
       </div>
+    </div>
     </div>
   )
 }

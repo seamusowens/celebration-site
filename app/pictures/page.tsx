@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 export default function Pictures() {
   const [pictures, setPictures] = useState([])
   const [caption, setCaption] = useState('')
+  const [imageUrl, setImageUrl] = useState('')
   
   useEffect(() => {
     fetch('/api/pictures')
@@ -16,30 +17,28 @@ export default function Pictures() {
     const fileInput = (e.target as HTMLFormElement).querySelector('input[type="file"]') as HTMLInputElement
     if (!fileInput.files?.[0]) return
     
-    const formData = new FormData()
-    formData.append('file', fileInput.files[0])
-    
-    const uploadRes = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, {
-      method: 'POST',
-      body: formData
-    })
-    const { secure_url } = await uploadRes.json()
-    
-    await fetch('/api/pictures', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: secure_url, caption })
-    })
-    
-    setCaption('')
-    fileInput.value = ''
-    const res = await fetch('/api/pictures')
-    setPictures(await res.json())
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+      const url = e.target?.result as string
+      await fetch('/api/pictures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, caption })
+      })
+      
+      setCaption('')
+      setImageUrl('')
+      fileInput.value = ''
+      const res = await fetch('/api/pictures')
+      setPictures(await res.json())
+    }
+    reader.readAsDataURL(fileInput.files[0])
   }
   
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: '100% 100%', backgroundPosition: 'center'}}>
-      <div className="container mx-auto">
+    <div className="min-h-screen bg-gray-900 p-4">
+      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+        <div className="container mx-auto p-8">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">📸 Picture Album 🐵</h1>
         <div className="fun-card p-8 max-w-2xl mx-auto mb-8">
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -60,6 +59,7 @@ export default function Pictures() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   )
 }
