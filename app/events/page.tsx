@@ -1,11 +1,24 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState('')
+  const [formData, setFormData] = useState({ name: '', email: '', attending: 1 })
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await fetch('/api/rsvps', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...formData, event: selectedEvent })
+    })
+    setFormData({ name: '', email: '', attending: 1 })
+    setSelectedEvent('')
+    alert('RSVP submitted! 🎉')
+  }
   
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/St Pete Celebration Page.jpg)', backgroundSize: 'cover'}}>
+    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center bottom'}}>
       <div className="container mx-auto">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">🎉 Celebrations of Life 🎉</h1>
         
@@ -26,11 +39,11 @@ export default function Events() {
         {selectedEvent && (
           <div className="fun-card p-8 max-w-2xl mx-auto">
             <h3 className="text-3xl font-bold text-pink-600 mb-6">RSVP for {selectedEvent === 'stpete' ? 'St. Petersburg' : 'South Bend'}</h3>
-            <form className="space-y-4">
-              <input type="text" placeholder="Your Name" className="w-full p-3 border-4 border-pink-500 rounded-lg" required/>
-              <input type="email" placeholder="Email" className="w-full p-3 border-4 border-pink-500 rounded-lg" required/>
-              <input type="number" placeholder="Number Attending" min="1" className="w-full p-3 border-4 border-pink-500 rounded-lg" required/>
-              <button type="submit" className="w-full bg-pink-600 text-white p-4 rounded-lg text-2xl font-bold hover:bg-pink-700">Submit RSVP! 🎊</button>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input type="text" placeholder="Your Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+              <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+              <input type="number" placeholder="Number Attending" min="1" value={formData.attending} onChange={(e) => setFormData({...formData, attending: parseInt(e.target.value)})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+              <button type="submit" className="w-full bg-pink-600 text-white p-4 rounded-2xl text-2xl font-bold hover:bg-pink-700 hover:scale-105 transition-transform shadow-lg">Submit RSVP! 🎊</button>
             </form>
           </div>
         )}
