@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive;
+  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
+}
+
+@keyframes bounce-pop {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.animate-pop {
+  animation: bounce-pop 2s ease-in-out infinite;
+}
+
+.fun-card {
+  background: rgba(255, 255, 255, 0.95);
+  border: 4px solid #ff1493;
+  box-shadow: 8px 8px 0px #ff69b4;
+  transition: all 0.3s;
+}
+
+.fun-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px #ff69b4;
+}

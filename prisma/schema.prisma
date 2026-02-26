@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Picture {
+  id        String   @id @default(cuid())
+  url       String
+  caption   String?
+  createdAt DateTime @default(now())
+}
+
+model Story {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  author    String
+  createdAt DateTime @default(now())
+}
+
+model RSVP {
+  id        String   @id @default(cuid())
+  event     String
+  name      String
+  email     String
+  attending Int
+  createdAt DateTime @default(now())
+}
