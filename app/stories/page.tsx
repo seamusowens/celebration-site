@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 export default function Stories() {
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'linear-gradient(rgba(255,105,180,0.3), rgba(255,20,147,0.3)), url(/images/Stories Page.jpg)', backgroundSize: 'cover'}}>
+    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/Stories Page.jpg)', backgroundSize: 'cover'}}>
       <div className="absolute top-20 left-10 w-24">
         <img src="/flamingo-meme.svg" alt="flamingo" />
       </div>

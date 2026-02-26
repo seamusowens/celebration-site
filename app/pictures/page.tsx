@@ -11,7 +11,7 @@ export default function Pictures() {
   }, [])
   
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'linear-gradient(rgba(255,105,180,0.3), rgba(255,20,147,0.3)), url(/images/Pictures page.jpg)', backgroundSize: 'cover'}}>
+    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/Pictures page.jpg)', backgroundSize: 'cover'}}>
       <div className="absolute top-20 right-10 w-24">
         <img src="/monkey-meme.svg" alt="monkey" />
       </div>

@@ -3,7 +3,7 @@ export default function Home() {
     <div 
       className="min-h-screen flex items-center justify-center relative"
       style={{
-        backgroundImage: `linear-gradient(rgba(255, 105, 180, 0.3), rgba(255, 20, 147, 0.3)), url(/images/Main Landing Page.jpg)`,
+        backgroundImage: `url(/images/Main Landing Page.jpg)`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
