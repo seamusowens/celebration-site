@@ -1,8 +1,16 @@
 'use client'
 import { useState, useEffect } from 'react'
 
+interface Story {
+  id: string
+  title: string
+  author: string
+  content: string
+  createdAt: string
+}
+
 export default function Stories() {
-  const [stories, setStories] = useState([])
+  const [stories, setStories] = useState<Story[]>([])
   const [formData, setFormData] = useState({ author: '', title: '', content: '' })
   const [currentIndex, setCurrentIndex] = useState(0)
 
