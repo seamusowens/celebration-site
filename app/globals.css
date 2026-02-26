@@ -4,7 +4,6 @@
 
 body {
   font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', cursive;
-  background: linear-gradient(135deg, #ff69b4 0%, #ff1493 50%, #ff69b4 100%);
 }
 
 @keyframes bounce-pop {
