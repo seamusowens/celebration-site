@@ -11,10 +11,7 @@ export default function Pictures() {
   }, [])
   
   return (
-    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/Pictures page.jpg)', backgroundSize: 'cover'}}>
-      <div className="absolute top-20 right-10 w-24">
-        <img src="/monkey-meme.svg" alt="monkey" />
-      </div>
+    <div className="min-h-screen p-8" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: 'cover'}}>
       <div className="container mx-auto">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">📸 Picture Album 🐵</h1>
         <div className="fun-card p-8 max-w-2xl mx-auto mb-8">
