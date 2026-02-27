@@ -8,14 +8,20 @@ export default function Admin() {
   const [pictures, setPictures] = useState([])
   const [stories, setStories] = useState([])
   const [tab, setTab] = useState('rsvps')
+  const [newStory, setNewStory] = useState({ author: '', title: '', content: '' })
+  const [newPicCaption, setNewPicCaption] = useState('')
 
   useEffect(() => {
     if (authenticated) {
-      fetch('/api/rsvps').then(res => res.json()).then(setRsvps)
-      fetch('/api/pictures').then(res => res.json()).then(setPictures)
-      fetch('/api/stories').then(res => res.json()).then(setStories)
+      loadData()
     }
   }, [authenticated])
+
+  const loadData = () => {
+    fetch('/api/rsvps').then(res => res.json()).then(setRsvps)
+    fetch('/api/pictures').then(res => res.json()).then(setPictures)
+    fetch('/api/stories').then(res => res.json()).then(setStories)
+  }
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
@@ -32,7 +38,7 @@ export default function Admin() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id })
     })
-    setPictures(pictures.filter((p: any) => p.id !== id))
+    loadData()
   }
 
   const deleteStory = async (id: string) => {
@@ -41,7 +47,38 @@ export default function Admin() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id })
     })
-    setStories(stories.filter((s: any) => s.id !== id))
+    loadData()
+  }
+
+  const addPicture = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const fileInput = (e.target as HTMLFormElement).querySelector('input[type="file"]') as HTMLInputElement
+    if (!fileInput.files?.[0]) return
+    
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+      const url = e.target?.result as string
+      await fetch('/api/pictures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url, caption: newPicCaption })
+      })
+      setNewPicCaption('')
+      fileInput.value = ''
+      loadData()
+    }
+    reader.readAsDataURL(fileInput.files[0])
+  }
+
+  const addStory = async (e: React.FormEvent) => {
+    e.preventDefault()
+    await fetch('/api/stories', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newStory)
+    })
+    setNewStory({ author: '', title: '', content: '' })
+    loadData()
   }
 
   if (!authenticated) {
@@ -105,6 +142,11 @@ export default function Admin() {
         {tab === 'pictures' && (
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">Pictures ({pictures.length})</h2>
+            <form onSubmit={addPicture} className="mb-6 p-4 bg-pink-50 rounded-lg space-y-3">
+              <input type="file" accept="image/*" className="w-full p-3 border-2 border-pink-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-500 file:text-white file:font-semibold" required/>
+              <input type="text" placeholder="Caption" value={newPicCaption} onChange={(e) => setNewPicCaption(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl"/>
+              <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-pink-700">Add Picture</button>
+            </form>
             <div className="grid md:grid-cols-3 gap-4">
               {pictures.map((pic: any) => (
                 <div key={pic.id} className="bg-pink-50 p-3 rounded-lg">
@@ -120,6 +162,12 @@ export default function Admin() {
         {tab === 'stories' && (
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">Stories ({stories.length})</h2>
+            <form onSubmit={addStory} className="mb-6 p-4 bg-pink-50 rounded-lg space-y-3">
+              <input type="text" placeholder="Author Name" value={newStory.author} onChange={(e) => setNewStory({...newStory, author: e.target.value})} className="w-full p-3 border-2 border-pink-300 rounded-xl" required/>
+              <input type="text" placeholder="Story Title" value={newStory.title} onChange={(e) => setNewStory({...newStory, title: e.target.value})} className="w-full p-3 border-2 border-pink-300 rounded-xl" required/>
+              <textarea placeholder="Story Content" rows={4} value={newStory.content} onChange={(e) => setNewStory({...newStory, content: e.target.value})} className="w-full p-3 border-2 border-pink-300 rounded-xl" required></textarea>
+              <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-pink-700">Add Story</button>
+            </form>
             <div className="space-y-4">
               {stories.map((story: any) => (
                 <div key={story.id} className="bg-pink-50 p-4 rounded-lg">

@@ -19,10 +19,10 @@ export default function Events() {
   
   return (
     <div className="min-h-screen bg-gray-900 p-4">
-      <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-around text-4xl p-2">
+      <div className="absolute left-0 top-[5%] bottom-0 flex flex-col justify-around text-4xl p-2">
         {[...Array(10)].map((_, i) => <span key={i}>{i % 2 === 0 ? '🐵' : '🦩'}</span>)}
       </div>
-      <div className="absolute right-0 top-0 bottom-0 flex flex-col justify-around text-4xl p-2">
+      <div className="absolute right-0 top-[5%] bottom-0 flex flex-col justify-around text-4xl p-2">
         {[...Array(10)].map((_, i) => <span key={i}>{i % 2 === 0 ? '🦩' : '🐵'}</span>)}
       </div>
       <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
