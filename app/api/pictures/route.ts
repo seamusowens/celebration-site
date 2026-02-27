@@ -1,23 +1,16 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+
+const pictures: any[] = []
 
 export async function GET() {
-  try {
-    const pictures = await prisma.picture.findMany({
-      orderBy: { createdAt: 'desc' }
-    })
-    return NextResponse.json(pictures)
-  } catch (error) {
-    return NextResponse.json([])
-  }
+  return NextResponse.json(pictures)
 }
 
 export async function POST(request: Request) {
   try {
     const { url, caption } = await request.json()
-    const picture = await prisma.picture.create({
-      data: { url, caption }
-    })
+    const picture = { id: Date.now().toString(), url, caption, createdAt: new Date().toISOString() }
+    pictures.unshift(picture)
     return NextResponse.json(picture)
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create picture' }, { status: 500 })
@@ -27,7 +20,8 @@ export async function POST(request: Request) {
 export async function DELETE(request: Request) {
   try {
     const { id } = await request.json()
-    await prisma.picture.delete({ where: { id } })
+    const index = pictures.findIndex(p => p.id === id)
+    if (index > -1) pictures.splice(index, 1)
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete picture' }, { status: 500 })

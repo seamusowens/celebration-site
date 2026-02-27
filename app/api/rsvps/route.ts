@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+
+const rsvps: any[] = []
 
 export async function POST(request: Request) {
   try {
     const { event, name, email, attending } = await request.json()
-    const rsvp = await prisma.rSVP.create({
-      data: { event, name, email, attending }
-    })
+    const rsvp = { id: Date.now().toString(), event, name, email, attending, createdAt: new Date().toISOString() }
+    rsvps.unshift(rsvp)
     return NextResponse.json(rsvp)
   } catch (error) {
     return NextResponse.json({ error: 'Failed to create RSVP' }, { status: 500 })
@@ -14,12 +14,5 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  try {
-    const rsvps = await prisma.rSVP.findMany({
-      orderBy: { createdAt: 'desc' }
-    })
-    return NextResponse.json(rsvps)
-  } catch (error) {
-    return NextResponse.json([])
-  }
+  return NextResponse.json(rsvps)
 }
