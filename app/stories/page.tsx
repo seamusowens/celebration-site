@@ -31,14 +31,25 @@ export default function Stories() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await fetch('/api/stories', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    })
-    setFormData({ author: '', title: '', content: '' })
-    const res = await fetch('/api/stories')
-    setStories(await res.json())
+    try {
+      const response = await fetch('/api/stories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      
+      if (response.ok) {
+        setFormData({ author: '', title: '', content: '' })
+        const res = await fetch('/api/stories')
+        const data = await res.json()
+        setStories(data)
+        alert('Story shared! 🐵')
+      } else {
+        alert('Failed to share story')
+      }
+    } catch (err) {
+      alert('Error sharing story')
+    }
   }
 
   return (

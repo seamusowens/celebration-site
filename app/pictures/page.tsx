@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 export default function Pictures() {
   const [pictures, setPictures] = useState([])
   const [caption, setCaption] = useState('')
-  const [imageUrl, setImageUrl] = useState('')
   
   useEffect(() => {
     fetch('/api/pictures')
@@ -19,25 +18,34 @@ export default function Pictures() {
     
     const reader = new FileReader()
     reader.onload = async (e) => {
-      const url = e.target?.result as string
-      await fetch('/api/pictures', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, caption })
-      })
-      
-      setCaption('')
-      setImageUrl('')
-      fileInput.value = ''
-      const res = await fetch('/api/pictures')
-      setPictures(await res.json())
+      try {
+        const url = e.target?.result as string
+        const response = await fetch('/api/pictures', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url, caption })
+        })
+        
+        if (response.ok) {
+          setCaption('')
+          fileInput.value = ''
+          const res = await fetch('/api/pictures')
+          const data = await res.json()
+          setPictures(data)
+          alert('Picture uploaded! 🎉')
+        } else {
+          alert('Upload failed')
+        }
+      } catch (err) {
+        alert('Error uploading picture')
+      }
     }
     reader.readAsDataURL(fileInput.files[0])
   }
   
   return (
     <div className="min-h-screen bg-gray-900 p-4">
-      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center 75%'}}>
         <div className="container mx-auto p-8">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">📸 Picture Album 🐵</h1>
         <div className="fun-card p-8 max-w-2xl mx-auto mb-8">
