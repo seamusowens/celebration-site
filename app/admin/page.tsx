@@ -17,10 +17,25 @@ export default function Admin() {
     }
   }, [authenticated])
 
-  const loadData = () => {
-    fetch('/api/rsvps').then(res => res.json()).then(setRsvps)
-    fetch('/api/pictures').then(res => res.json()).then(setPictures)
-    fetch('/api/stories').then(res => res.json()).then(setStories)
+  const loadData = async () => {
+    try {
+      const rsvpRes = await fetch('/api/rsvps')
+      const rsvpData = await rsvpRes.json()
+      console.log('RSVPs loaded:', rsvpData)
+      setRsvps(rsvpData)
+      
+      const picRes = await fetch('/api/pictures')
+      const picData = await picRes.json()
+      console.log('Pictures loaded:', picData)
+      setPictures(picData)
+      
+      const storyRes = await fetch('/api/stories')
+      const storyData = await storyRes.json()
+      console.log('Stories loaded:', storyData)
+      setStories(storyData)
+    } catch (err) {
+      console.error('Error loading data:', err)
+    }
   }
 
   const handleLogin = (e: React.FormEvent) => {
@@ -113,28 +128,36 @@ export default function Admin() {
           <div className="grid md:grid-cols-2 gap-8">
             <div className="fun-card p-6">
               <h2 className="text-3xl font-bold text-pink-600 mb-4">St. Petersburg RSVPs ({stPeteRsvps.length})</h2>
-              <div className="space-y-3">
-                {stPeteRsvps.map((rsvp: any) => (
-                  <div key={rsvp.id} className="bg-pink-50 p-3 rounded-lg">
-                    <p className="font-bold">{rsvp.name}</p>
-                    <p className="text-sm">{rsvp.email}</p>
-                    <p className="text-sm">Attending: {rsvp.attending}</p>
-                  </div>
-                ))}
-              </div>
+              {stPeteRsvps.length === 0 ? (
+                <p className="text-gray-500">No RSVPs yet</p>
+              ) : (
+                <div className="space-y-3">
+                  {stPeteRsvps.map((rsvp: any) => (
+                    <div key={rsvp.id} className="bg-pink-50 p-3 rounded-lg">
+                      <p className="font-bold">{rsvp.name}</p>
+                      <p className="text-sm">{rsvp.email}</p>
+                      <p className="text-sm">Attending: {rsvp.attending}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="fun-card p-6">
               <h2 className="text-3xl font-bold text-pink-600 mb-4">South Bend RSVPs ({southBendRsvps.length})</h2>
-              <div className="space-y-3">
-                {southBendRsvps.map((rsvp: any) => (
-                  <div key={rsvp.id} className="bg-pink-50 p-3 rounded-lg">
-                    <p className="font-bold">{rsvp.name}</p>
-                    <p className="text-sm">{rsvp.email}</p>
-                    <p className="text-sm">Attending: {rsvp.attending}</p>
-                  </div>
-                ))}
-              </div>
+              {southBendRsvps.length === 0 ? (
+                <p className="text-gray-500">No RSVPs yet</p>
+              ) : (
+                <div className="space-y-3">
+                  {southBendRsvps.map((rsvp: any) => (
+                    <div key={rsvp.id} className="bg-pink-50 p-3 rounded-lg">
+                      <p className="font-bold">{rsvp.name}</p>
+                      <p className="text-sm">{rsvp.email}</p>
+                      <p className="text-sm">Attending: {rsvp.attending}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -147,15 +170,19 @@ export default function Admin() {
               <input type="text" placeholder="Caption" value={newPicCaption} onChange={(e) => setNewPicCaption(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl"/>
               <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-pink-700">Add Picture</button>
             </form>
-            <div className="grid md:grid-cols-3 gap-4">
-              {pictures.map((pic: any) => (
-                <div key={pic.id} className="bg-pink-50 p-3 rounded-lg">
-                  <img src={pic.url} alt={pic.caption || ''} className="w-full h-32 object-cover rounded mb-2"/>
-                  <p className="text-sm mb-2">{pic.caption}</p>
-                  <button onClick={() => deletePicture(pic.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
-                </div>
-              ))}
-            </div>
+            {pictures.length === 0 ? (
+              <p className="text-gray-500">No pictures yet</p>
+            ) : (
+              <div className="grid md:grid-cols-3 gap-4">
+                {pictures.map((pic: any) => (
+                  <div key={pic.id} className="bg-pink-50 p-3 rounded-lg">
+                    <img src={pic.url} alt={pic.caption || ''} className="w-full h-32 object-cover rounded mb-2"/>
+                    <p className="text-sm mb-2">{pic.caption}</p>
+                    <button onClick={() => deletePicture(pic.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Delete</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
