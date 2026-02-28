@@ -12,21 +12,23 @@ export default function Home() {
       <div className="absolute right-0 top-[5%] bottom-0 flex flex-col justify-around text-4xl p-2">
         {[...Array(10)].map((_, i) => <span key={i}>{i % 2 === 0 ? '🦩' : '🐵'}</span>)}
       </div>
-      <div 
-        className="w-full max-w-5xl shadow-2xl border-8 border-pink-500"
-        style={{
-          backgroundImage: `url(/images/Main%20Landing%20Page.jpg)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          minHeight: '100vh'
-        }}
-      >
-      </div>
-      <div className="w-full max-w-5xl shadow-2xl border-8 border-pink-500 border-t-0 bg-gray-900 p-8">
-        <div className="text-center">
-          <h1 className="text-6xl md:text-9xl font-black text-white drop-shadow-2xl animate-pop" style={{textShadow: '4px 4px 8px rgba(0,0,0,0.8), -2px -2px 4px rgba(255,255,255,0.5)'}}>
-            What Are You Wearing?!
-          </h1>
+      <div className="flex flex-col items-center">
+        <div 
+          className="w-full max-w-5xl shadow-2xl border-8 border-pink-500"
+          style={{
+            backgroundImage: `url(/images/Main%20Landing%20Page.jpg)`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            minHeight: '100vh'
+          }}
+        >
+        </div>
+        <div className="w-full max-w-5xl shadow-2xl border-8 border-pink-500 border-t-0 bg-gray-900 p-8">
+          <div className="text-center">
+            <h1 className="text-6xl md:text-9xl font-black text-white drop-shadow-2xl animate-pop" style={{textShadow: '4px 4px 8px rgba(0,0,0,0.8), -2px -2px 4px rgba(255,255,255,0.5)'}}>
+              What Are You Wearing?!
+            </h1>
+          </div>
         </div>
       </div>
     </div>

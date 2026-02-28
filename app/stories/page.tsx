@@ -1,5 +1,16 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, ScanCommand, PutCommand } from '@aws-sdk/lib-dynamodb'
+
+const dynamoClient = new DynamoDBClient({
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!
+  }
+})
+const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
 
 interface Story {
   id: string
@@ -15,10 +26,17 @@ export default function Stories() {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
-    fetch('/api/stories')
-      .then(res => res.json())
-      .then(data => setStories(data))
+    loadStories()
   }, [])
+
+  const loadStories = async () => {
+    try {
+      const { Items } = await dynamodb.send(new ScanCommand({ TableName: 'celebration-stories' }))
+      setStories(Items as Story[] || [])
+    } catch (err) {
+      console.error('Error loading stories:', err)
+    }
+  }
 
   useEffect(() => {
     if (stories.length > 0) {
@@ -32,22 +50,16 @@ export default function Stories() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const response = await fetch('/api/stories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      })
+      const id = Date.now().toString()
+      const story = { id, ...formData, createdAt: new Date().toISOString() }
       
-      if (response.ok) {
-        setFormData({ author: '', title: '', content: '' })
-        const res = await fetch('/api/stories')
-        const data = await res.json()
-        setStories(data)
-        alert('Story shared! 🐵')
-      } else {
-        alert('Failed to share story')
-      }
+      await dynamodb.send(new PutCommand({ TableName: 'celebration-stories', Item: story }))
+      
+      setFormData({ author: '', title: '', content: '' })
+      await loadStories()
+      alert('Story shared! 🐵')
     } catch (err) {
+      console.error('Error sharing story:', err)
       alert('Error sharing story')
     }
   }
