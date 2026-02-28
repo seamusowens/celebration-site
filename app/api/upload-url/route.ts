@@ -12,6 +12,12 @@ const BUCKET = 'celebration-site-pictures'
 
 export async function POST(request: Request) {
   try {
+    console.log('Environment check:', {
+      hasAccessKey: !!process.env.APP_AWS_ACCESS_KEY_ID,
+      hasSecretKey: !!process.env.APP_AWS_SECRET_ACCESS_KEY,
+      region: process.env.REGION
+    })
+    
     const { filename } = await request.json()
     const key = `${Date.now()}-${filename}`
     
