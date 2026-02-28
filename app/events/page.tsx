@@ -25,7 +25,7 @@ export default function Events() {
       <div className="absolute right-0 top-[5%] bottom-0 flex flex-col justify-around text-4xl p-2">
         {[...Array(10)].map((_, i) => <span key={i}>{i % 2 === 0 ? '🦩' : '🐵'}</span>)}
       </div>
-      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500 relative" style={{backgroundImage: 'url(/images/St%20Pete%20Celebration%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
         <div className="container mx-auto p-8">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">🎉 Celebrations of Life 🎉</h1>
         
@@ -44,14 +44,16 @@ export default function Events() {
         </div>
         
         {selectedEvent && (
-          <div className="fun-card p-8 max-w-2xl mx-auto">
-            <h3 className="text-3xl font-bold text-pink-600 mb-6">RSVP for {selectedEvent === 'stpete' ? 'St. Petersburg' : 'South Bend'}</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input type="text" placeholder="Your Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
-              <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
-              <input type="number" placeholder="Number Attending" min="1" value={formData.attending} onChange={(e) => setFormData({...formData, attending: parseInt(e.target.value)})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
-              <button type="submit" className="w-full bg-pink-600 text-white p-4 rounded-2xl text-2xl font-bold hover:bg-pink-700 hover:scale-105 transition-transform shadow-lg">Submit RSVP! 🎊</button>
-            </form>
+          <div className="absolute bottom-8 left-8 right-8">
+            <div className="fun-card p-4 max-w-full mx-auto">
+              <h3 className="text-2xl font-bold text-pink-600 mb-4 text-center">RSVP for {selectedEvent === 'stpete' ? 'St. Petersburg' : 'South Bend'}</h3>
+              <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-center justify-center">
+                <input type="text" placeholder="Your Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+                <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+                <input type="number" placeholder="Number Attending" min="1" value={formData.attending} onChange={(e) => setFormData({...formData, attending: parseInt(e.target.value)})} className="flex-1 min-w-[120px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+                <button type="submit" className="bg-pink-600 text-white px-6 py-3 rounded-2xl text-lg font-bold hover:bg-pink-700 hover:scale-105 transition-transform shadow-lg whitespace-nowrap">Submit RSVP! 🎊</button>
+              </form>
+            </div>
           </div>
         )}
       </div>

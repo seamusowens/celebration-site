@@ -20,10 +20,10 @@ export default function AltHome() {
         }}
       >
         <div className="text-center p-8">
-          <h1 className="text-6xl md:text-9xl font-bold text-pink-500 drop-shadow-2xl animate-bounce" style={{fontFamily: 'Georgia, serif', textShadow: '3px 3px 6px rgba(236,72,153,0.6)', animationDuration: '1s'}}>
+          <h1 className="text-6xl md:text-9xl font-bold text-white drop-shadow-2xl animate-bounce" style={{fontFamily: 'Georgia, serif', textShadow: '4px 4px 8px rgba(0,0,0,0.8)', animationDuration: '1s'}}>
             WHAT ARE YOU WEARING?!
           </h1>
-          <p className="text-3xl md:text-5xl text-pink-600 mt-8 font-semibold drop-shadow-lg animate-bounce" style={{fontFamily: 'Georgia, serif', animationDelay: '0.2s', animationDuration: '1.2s'}}>
+          <p className="text-3xl md:text-5xl text-white mt-8 font-semibold drop-shadow-lg animate-bounce" style={{fontFamily: 'Georgia, serif', animationDelay: '0.2s', animationDuration: '1.2s'}}>
             🐵 A Celebration of Life 🦩
           </p>
         </div>

@@ -60,21 +60,24 @@ export default function Stories() {
       <div className="absolute right-0 top-[5%] bottom-0 flex flex-col justify-around text-4xl p-2">
         {[...Array(10)].map((_, i) => <span key={i}>{i % 2 === 0 ? '🦩' : '🐵'}</span>)}
       </div>
-      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500" style={{backgroundImage: 'url(/images/Stories%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <div className="w-full max-w-5xl mx-auto min-h-screen shadow-2xl border-8 border-pink-500 relative" style={{backgroundImage: 'url(/images/Stories%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
         <div className="container mx-auto p-8">
         <h1 className="text-5xl font-black text-white text-center mb-4 drop-shadow-lg">THAT'S ILLEGAL!</h1>
         <p className="text-3xl text-yellow-300 text-center mb-8 font-bold">Share Your Stories</p>
-        <div className="fun-card p-8 max-w-2xl mx-auto mb-8">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input type="text" placeholder="Your Name" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
-            <input type="text" placeholder="Story Title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
-            <textarea placeholder="Share your story..." rows={6} value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required></textarea>
-            <button type="submit" className="w-full bg-pink-600 text-white p-4 rounded-2xl text-2xl font-bold hover:bg-pink-700 hover:scale-105 transition-transform shadow-lg">Share Story! 🐵</button>
-          </form>
+        
+        <div className="absolute bottom-8 left-8 right-8">
+          <div className="fun-card p-4 max-w-full mx-auto">
+            <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-center justify-center">
+              <input type="text" placeholder="Your Name" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+              <input type="text" placeholder="Story Title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
+              <textarea placeholder="Share your story..." rows={2} value={formData.content} onChange={(e) => setFormData({...formData, content: e.target.value})} className="flex-1 min-w-[200px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required></textarea>
+              <button type="submit" className="bg-pink-600 text-white px-6 py-3 rounded-2xl text-lg font-bold hover:bg-pink-700 hover:scale-105 transition-transform shadow-lg whitespace-nowrap">Share Story! 🐵</button>
+            </form>
+          </div>
         </div>
 
         {stories.length > 0 && (
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-4xl mx-auto mb-32">
             <div className="fun-card p-6 transition-all duration-500">
               <h3 className="text-2xl font-bold text-pink-600 mb-2">{stories[currentIndex].title}</h3>
               <p className="text-sm text-gray-600 mb-3">By {stories[currentIndex].author}</p>
