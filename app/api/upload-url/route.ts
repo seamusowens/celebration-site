@@ -2,7 +2,12 @@ import { NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
-const s3 = new S3Client({ region: process.env.REGION || 'us-east-1' })
+const credentials = process.env.APP_AWS_ACCESS_KEY_ID ? {
+  accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY!
+} : undefined
+
+const s3 = new S3Client({ region: process.env.REGION || 'us-east-1', credentials })
 const BUCKET = 'celebration-site-pictures'
 
 export async function POST(request: Request) {

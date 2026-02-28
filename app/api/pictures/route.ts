@@ -3,9 +3,14 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, ScanCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
 
-const dynamoClient = new DynamoDBClient({ region: process.env.REGION || 'us-east-1' })
+const credentials = process.env.APP_AWS_ACCESS_KEY_ID ? {
+  accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY!
+} : undefined
+
+const dynamoClient = new DynamoDBClient({ region: process.env.REGION || 'us-east-1', credentials })
 const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
-const s3 = new S3Client({ region: process.env.REGION || 'us-east-1' })
+const s3 = new S3Client({ region: process.env.REGION || 'us-east-1', credentials })
 const BUCKET = 'celebration-site-pictures'
 const TABLE = process.env.DYNAMODB_PICTURES_TABLE || 'celebration-pictures'
 const inMemoryPictures: any[] = []
