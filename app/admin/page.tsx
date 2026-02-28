@@ -41,7 +41,7 @@ export default function Admin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    if (email === 'simi@admin.com' && password === 'admin123') {
+    if (email === 'john@admin.com' && password === 'admin123') {
       setAuthenticated(true)
       localStorage.setItem('adminAuth', 'true')
     } else {

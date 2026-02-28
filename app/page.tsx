@@ -3,7 +3,7 @@ import Link from 'next/link'
 export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-      <Link href="/admin" className="fixed bottom-4 right-4 text-xs text-gray-400 hover:text-gray-200 transition z-50">
+      <Link href="/admin" className="fixed bottom-4 right-4 text-xs text-gray-400 hover:text-gray-200 transition z-[100]">
         Admin
       </Link>
       <div className="absolute left-0 top-[5%] bottom-0 flex flex-col justify-around text-4xl p-2">
