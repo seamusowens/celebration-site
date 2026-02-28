@@ -24,9 +24,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/events" className="text-white text-xl md:text-2xl font-bold hover:text-yellow-300 transition">
               🎉 Events
             </Link>
-            <Link href="/admin" className="text-white text-xl md:text-2xl font-bold hover:text-yellow-300 transition">
-              🔐 Admin
-            </Link>
           </div>
         </nav>
         <main className="min-h-screen">{children}</main>
