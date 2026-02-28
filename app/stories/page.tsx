@@ -23,7 +23,6 @@ interface Story {
 export default function Stories() {
   const [stories, setStories] = useState<Story[]>([])
   const [formData, setFormData] = useState({ author: '', title: '', content: '' })
-  const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
     loadStories()
@@ -37,15 +36,6 @@ export default function Stories() {
       console.error('Error loading stories:', err)
     }
   }
-
-  useEffect(() => {
-    if (stories.length > 0) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % stories.length)
-      }, 5000)
-      return () => clearInterval(interval)
-    }
-  }, [stories.length])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -93,19 +83,16 @@ export default function Stories() {
         </div>
 
         {stories.length > 0 && (
-          <div className="bg-gray-900 p-8">
-            <div className="max-w-4xl mx-auto">
-              <div className="fun-card p-6 transition-all duration-500">
-                <h3 className="text-2xl font-bold text-pink-600 mb-2">{stories[currentIndex].title}</h3>
-                <p className="text-sm text-gray-600 mb-3">By {stories[currentIndex].author}</p>
-                <p className="text-lg">{stories[currentIndex].content}</p>
+          <div className="bg-gray-900 p-8 space-y-6">
+            {stories.map((story) => (
+              <div key={story.id} className="max-w-4xl mx-auto">
+                <div className="fun-card p-6">
+                  <h3 className="text-2xl font-bold text-pink-600 mb-2">{story.title}</h3>
+                  <p className="text-sm text-gray-600 mb-3">By {story.author}</p>
+                  <p className="text-lg">{story.content}</p>
+                </div>
               </div>
-              <div className="flex justify-center gap-2 mt-4">
-                {stories.map((_: any, idx: number) => (
-                  <button key={idx} onClick={() => setCurrentIndex(idx)} className={`w-3 h-3 rounded-full ${idx === currentIndex ? 'bg-pink-600' : 'bg-pink-300'}`}/>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
         )}
       </div>
