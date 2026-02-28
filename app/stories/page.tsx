@@ -62,12 +62,14 @@ export default function Stories() {
       </div>
       
       <div className="w-full max-w-5xl mx-auto shadow-2xl border-8 border-pink-500">
-        <div className="min-h-screen relative" style={{backgroundImage: 'url(/images/Stories%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
-          <div className="container mx-auto p-8">
+        <div className="min-h-screen relative flex flex-col" style={{backgroundImage: 'url(/images/Stories%20Page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+          <div className="container mx-auto p-8 flex-1">
             <h1 className="text-5xl font-black text-white text-center mb-4 drop-shadow-lg">THAT'S ILLEGAL!</h1>
             <p className="text-3xl text-yellow-300 text-center mb-8 font-bold">Share Your Stories</p>
-            
-            <div className="fun-card p-4 max-w-full mx-auto mb-8">
+          </div>
+          
+          <div className="p-8">
+            <div className="fun-card p-4 max-w-full mx-auto">
               <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-center justify-center">
                 <input type="text" placeholder="Your Name" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
                 <input type="text" placeholder="Story Title" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>

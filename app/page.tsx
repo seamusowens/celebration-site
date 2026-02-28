@@ -22,7 +22,7 @@ export default function Home() {
       >
         <div className="text-center p-8">
           <h1 className="text-6xl md:text-9xl font-black text-white drop-shadow-2xl animate-pop" style={{textShadow: '4px 4px 8px rgba(0,0,0,0.8), -2px -2px 4px rgba(255,255,255,0.5)'}}>
-            WHAT ARE YOU WEARING?!
+            What Are You Wearing?!
           </h1>
         </div>
       </div>

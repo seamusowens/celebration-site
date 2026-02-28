@@ -53,11 +53,13 @@ export default function Pictures() {
       </div>
       
       <div className="w-full max-w-5xl mx-auto shadow-2xl border-8 border-pink-500">
-        <div className="min-h-screen relative" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
-          <div className="container mx-auto p-8">
+        <div className="min-h-screen relative flex flex-col" style={{backgroundImage: 'url(/images/Pictures%20page.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+          <div className="container mx-auto p-8 flex-1">
             <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">📸 Picture Album 🐵</h1>
-            
-            <div className="fun-card p-4 max-w-full mx-auto mb-8">
+          </div>
+          
+          <div className="p-8">
+            <div className="fun-card p-4 max-w-full mx-auto">
               <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-center justify-center">
                 <input type="file" accept="image/*" className="flex-1 min-w-[200px] p-3 border-2 border-pink-300 rounded-2xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-500 file:text-white file:font-semibold hover:file:bg-pink-600 transition-all shadow-sm hover:shadow-md" required/>
                 <input type="text" placeholder="Caption (optional)" value={caption} onChange={(e) => setCaption(e.target.value)} className="flex-1 min-w-[200px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none"/>
