@@ -29,17 +29,26 @@ export default function Admin() {
 
   const loadData = async () => {
     try {
+      console.log('Loading data from DynamoDB...')
+      console.log('Has credentials:', {
+        hasAccessKey: !!process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+        hasSecretKey: !!process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY
+      })
+      
       const [rsvpRes, picRes, storyRes] = await Promise.all([
         dynamodb.send(new ScanCommand({ TableName: 'celebration-rsvps' })),
         dynamodb.send(new ScanCommand({ TableName: 'celebration-pictures' })),
         dynamodb.send(new ScanCommand({ TableName: 'celebration-stories' }))
       ])
       
+      console.log('Loaded:', { rsvps: rsvpRes.Items?.length, pictures: picRes.Items?.length, stories: storyRes.Items?.length })
+      
       setRsvps(rsvpRes.Items || [])
       setPictures(picRes.Items || [])
       setStories(storyRes.Items || [])
     } catch (err) {
       console.error('Error loading data:', err)
+      alert('Error loading data. Check console for details.')
     }
   }
 
