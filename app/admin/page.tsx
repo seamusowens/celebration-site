@@ -1,16 +1,25 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
+
+const dynamoClient = new DynamoDBClient({
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!
+  }
+})
+const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
 
 export default function Admin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
-  const [rsvps, setRsvps] = useState([])
-  const [pictures, setPictures] = useState([])
-  const [stories, setStories] = useState([])
+  const [rsvps, setRsvps] = useState<any[]>([])
+  const [pictures, setPictures] = useState<any[]>([])
+  const [stories, setStories] = useState<any[]>([])
   const [tab, setTab] = useState('rsvps')
-  const [newStory, setNewStory] = useState({ author: '', title: '', content: '' })
-  const [newPicCaption, setNewPicCaption] = useState('')
 
   useEffect(() => {
     if (authenticated) {
@@ -20,20 +29,15 @@ export default function Admin() {
 
   const loadData = async () => {
     try {
-      const rsvpRes = await fetch('/api/rsvps')
-      const rsvpData = await rsvpRes.json()
-      console.log('RSVPs loaded:', rsvpData)
-      setRsvps(rsvpData)
+      const [rsvpRes, picRes, storyRes] = await Promise.all([
+        dynamodb.send(new ScanCommand({ TableName: 'celebration-rsvps' })),
+        dynamodb.send(new ScanCommand({ TableName: 'celebration-pictures' })),
+        dynamodb.send(new ScanCommand({ TableName: 'celebration-stories' }))
+      ])
       
-      const picRes = await fetch('/api/pictures')
-      const picData = await picRes.json()
-      console.log('Pictures loaded:', picData)
-      setPictures(picData)
-      
-      const storyRes = await fetch('/api/stories')
-      const storyData = await storyRes.json()
-      console.log('Stories loaded:', storyData)
-      setStories(storyData)
+      setRsvps(rsvpRes.Items || [])
+      setPictures(picRes.Items || [])
+      setStories(storyRes.Items || [])
     } catch (err) {
       console.error('Error loading data:', err)
     }
@@ -62,21 +66,30 @@ export default function Admin() {
   }, [])
 
   const deletePicture = async (id: string) => {
-    await fetch('/api/pictures', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
-    })
-    loadData()
+    try {
+      await dynamodb.send(new DeleteCommand({ TableName: 'celebration-pictures', Key: { id } }))
+      loadData()
+    } catch (err) {
+      console.error('Error deleting picture:', err)
+    }
   }
 
   const deleteStory = async (id: string) => {
-    await fetch('/api/stories', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
-    })
-    loadData()
+    try {
+      await dynamodb.send(new DeleteCommand({ TableName: 'celebration-stories', Key: { id } }))
+      loadData()
+    } catch (err) {
+      console.error('Error deleting story:', err)
+    }
+  }
+
+  const deleteRsvp = async (id: string) => {
+    try {
+      await dynamodb.send(new DeleteCommand({ TableName: 'celebration-rsvps', Key: { id } }))
+      loadData()
+    } catch (err) {
+      console.error('Error deleting RSVP:', err)
+    }
   }
 
   const addPicture = async (e: React.FormEvent) => {
@@ -155,6 +168,7 @@ export default function Admin() {
                       <p className="font-bold">{rsvp.name}</p>
                       <p className="text-sm">{rsvp.email}</p>
                       <p className="text-sm">Attending: {rsvp.attending}</p>
+                      <button onClick={() => deleteRsvp(rsvp.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 mt-2">Delete</button>
                     </div>
                   ))}
                 </div>
@@ -172,6 +186,7 @@ export default function Admin() {
                       <p className="font-bold">{rsvp.name}</p>
                       <p className="text-sm">{rsvp.email}</p>
                       <p className="text-sm">Attending: {rsvp.attending}</p>
+                      <button onClick={() => deleteRsvp(rsvp.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 mt-2">Delete</button>
                     </div>
                   ))}
                 </div>
@@ -183,11 +198,6 @@ export default function Admin() {
         {tab === 'pictures' && (
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">Pictures ({pictures.length})</h2>
-            <form onSubmit={addPicture} className="mb-6 p-4 bg-pink-50 rounded-lg space-y-3">
-              <input type="file" accept="image/*" className="w-full p-3 border-2 border-pink-300 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-500 file:text-white file:font-semibold" required/>
-              <input type="text" placeholder="Caption" value={newPicCaption} onChange={(e) => setNewPicCaption(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl"/>
-              <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-pink-700">Add Picture</button>
-            </form>
             {pictures.length === 0 ? (
               <p className="text-gray-500">No pictures yet</p>
             ) : (
@@ -207,22 +217,20 @@ export default function Admin() {
         {tab === 'stories' && (
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">Stories ({stories.length})</h2>
-            <form onSubmit={addStory} className="mb-6 p-4 bg-pink-50 rounded-lg space-y-3">
-              <input type="text" placeholder="Author Name" value={newStory.author} onChange={(e) => setNewStory({...newStory, author: e.target.value})} className="w-full p-3 border-2 border-pink-300 rounded-xl" required/>
-              <input type="text" placeholder="Story Title" value={newStory.title} onChange={(e) => setNewStory({...newStory, title: e.target.value})} className="w-full p-3 border-2 border-pink-300 rounded-xl" required/>
-              <textarea placeholder="Story Content" rows={4} value={newStory.content} onChange={(e) => setNewStory({...newStory, content: e.target.value})} className="w-full p-3 border-2 border-pink-300 rounded-xl" required></textarea>
-              <button type="submit" className="bg-pink-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-pink-700">Add Story</button>
-            </form>
-            <div className="space-y-4">
-              {stories.map((story: any) => (
-                <div key={story.id} className="bg-pink-50 p-4 rounded-lg">
-                  <h3 className="font-bold text-lg">{story.title}</h3>
-                  <p className="text-sm text-gray-600">By {story.author}</p>
-                  <p className="text-sm mt-2">{story.content}</p>
-                  <button onClick={() => deleteStory(story.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 mt-2">Delete</button>
-                </div>
-              ))}
-            </div>
+            {stories.length === 0 ? (
+              <p className="text-gray-500">No stories yet</p>
+            ) : (
+              <div className="space-y-4">
+                {stories.map((story: any) => (
+                  <div key={story.id} className="bg-pink-50 p-4 rounded-lg">
+                    <h3 className="font-bold text-lg">{story.title}</h3>
+                    <p className="text-sm text-gray-600">By {story.author}</p>
+                    <p className="text-sm mt-2">{story.content}</p>
+                    <button onClick={() => deleteStory(story.id)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600 mt-2">Delete</button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </div>
