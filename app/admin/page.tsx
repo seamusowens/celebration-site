@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 
 export default function Admin() {
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
   const [rsvps, setRsvps] = useState([])
@@ -40,11 +41,11 @@ export default function Admin() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault()
-    if (password === 'admin123') {
+    if (email === 'simi@admin.com' && password === 'admin123') {
       setAuthenticated(true)
       localStorage.setItem('adminAuth', 'true')
     } else {
-      alert('Incorrect password')
+      alert('Incorrect credentials')
     }
   }
 
@@ -115,6 +116,7 @@ export default function Admin() {
         <div className="fun-card p-8 max-w-md w-full">
           <h1 className="text-3xl font-bold text-pink-600 mb-6 text-center">Admin Login</h1>
           <form onSubmit={handleLogin} className="space-y-4">
+            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm focus:border-pink-500 focus:outline-none" required/>
             <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-4 border-2 border-pink-300 rounded-2xl shadow-sm focus:border-pink-500 focus:outline-none" required/>
             <button type="submit" className="w-full bg-pink-600 text-white p-4 rounded-2xl text-xl font-bold hover:bg-pink-700">Login</button>
           </form>
