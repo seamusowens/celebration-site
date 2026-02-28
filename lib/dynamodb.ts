@@ -1,7 +1,9 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, PutCommand, ScanCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 
-const client = new DynamoDBClient({ region: process.env.REGION || 'us-east-1' })
+const client = new DynamoDBClient({ 
+  region: process.env.REGION || 'us-east-1'
+})
 export const dynamodb = DynamoDBDocumentClient.from(client)
 
 export const TABLES = {

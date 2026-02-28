@@ -1,16 +1,19 @@
 import { NextResponse } from 'next/server'
-import { dynamodb, TABLES } from '@/lib/dynamodb'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, ScanCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
-import { ScanCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 
+const dynamoClient = new DynamoDBClient({ region: process.env.REGION || 'us-east-1' })
+const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
 const s3 = new S3Client({ region: process.env.REGION || 'us-east-1' })
 const BUCKET = 'celebration-site-pictures'
+const TABLE = process.env.DYNAMODB_PICTURES_TABLE || 'celebration-pictures'
 const inMemoryPictures: any[] = []
 
 export async function GET() {
   try {
-    console.log('Fetching pictures from DynamoDB table:', TABLES.PICTURES)
-    const { Items } = await dynamodb.send(new ScanCommand({ TableName: TABLES.PICTURES }))
+    console.log('Fetching pictures from DynamoDB table:', TABLE)
+    const { Items } = await dynamodb.send(new ScanCommand({ TableName: TABLE }))
     console.log('DynamoDB returned items:', Items?.length || 0)
     return NextResponse.json(Items || [])
   } catch (error) {
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
     const picture = { id, url: s3Url, caption, createdAt: new Date().toISOString() }
     
     console.log('Saving to DynamoDB:', picture)
-    await dynamodb.send(new PutCommand({ TableName: TABLES.PICTURES, Item: picture }))
+    await dynamodb.send(new PutCommand({ TableName: TABLE, Item: picture }))
     console.log('DynamoDB save successful')
     
     return NextResponse.json(picture)
@@ -61,7 +64,7 @@ export async function DELETE(request: Request) {
       // Delete from S3
       await s3.send(new DeleteObjectCommand({ Bucket: BUCKET, Key: `${id}.jpg` }))
       // Delete from DynamoDB
-      await dynamodb.send(new DeleteCommand({ TableName: TABLES.PICTURES, Key: { id } }))
+      await dynamodb.send(new DeleteCommand({ TableName: TABLE, Key: { id } }))
     } catch (dbError) {
       const index = inMemoryPictures.findIndex(p => p.id === id)
       if (index > -1) inMemoryPictures.splice(index, 1)

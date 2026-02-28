@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb'
+    }
+  },
+  env: {
+    AWS_REGION: process.env.REGION || 'us-east-1'
+  }
 }
 
 module.exports = nextConfig
