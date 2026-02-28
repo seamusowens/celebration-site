@@ -1,15 +1,33 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, ScanCommand, PutCommand } from '@aws-sdk/lib-dynamodb'
+
+const dynamoClient = new DynamoDBClient({
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!
+  }
+})
+const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
 
 export default function Pictures() {
   const [pictures, setPictures] = useState([])
   const [caption, setCaption] = useState('')
   
   useEffect(() => {
-    fetch('/api/pictures')
-      .then(res => res.json())
-      .then(data => setPictures(data))
+    loadPictures()
   }, [])
+
+  const loadPictures = async () => {
+    try {
+      const { Items } = await dynamodb.send(new ScanCommand({ TableName: 'celebration-pictures' }))
+      setPictures(Items || [])
+    } catch (err) {
+      console.error('Error loading pictures:', err)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,39 +36,25 @@ export default function Pictures() {
     
     try {
       const file = fileInput.files[0]
-      
-      // Get presigned URL
-      const urlRes = await fetch('/api/upload-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: file.name })
-      })
-      const { uploadUrl, publicUrl } = await urlRes.json()
+      const id = Date.now().toString()
+      const key = `${id}.jpg`
+      const s3Url = `https://celebration-site-pictures.s3.amazonaws.com/${key}`
       
       // Upload directly to S3
-      await fetch(uploadUrl, {
+      await fetch(s3Url, {
         method: 'PUT',
         body: file,
-        headers: { 'Content-Type': 'image/jpeg' }
+        headers: { 'Content-Type': file.type }
       })
       
       // Save metadata to DynamoDB
-      const response = await fetch('/api/pictures', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: publicUrl, caption })
-      })
+      const picture = { id, url: s3Url, caption, createdAt: new Date().toISOString() }
+      await dynamodb.send(new PutCommand({ TableName: 'celebration-pictures', Item: picture }))
       
-      if (response.ok) {
-        setCaption('')
-        fileInput.value = ''
-        const res = await fetch('/api/pictures')
-        const data = await res.json()
-        setPictures(data)
-        alert('Picture uploaded! 🎉')
-      } else {
-        alert('Upload failed')
-      }
+      setCaption('')
+      fileInput.value = ''
+      await loadPictures()
+      alert('Picture uploaded! 🎉')
     } catch (err) {
       console.error('Upload error:', err)
       alert('Error uploading picture')

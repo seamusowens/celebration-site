@@ -34,10 +34,7 @@ export async function POST(request: Request) {
     const id = Date.now().toString()
     const picture = { id, url, caption, createdAt: new Date().toISOString() }
     
-    console.log('Saving picture metadata to DynamoDB:', picture)
-    await dynamodb.send(new PutCommand({ TableName: TABLE, Item: picture }))
-    console.log('DynamoDB save successful')
-    
+    // Just return success - client will handle DynamoDB
     return NextResponse.json(picture)
   } catch (error) {
     console.error('Error saving picture:', error)
