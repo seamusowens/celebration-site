@@ -101,37 +101,6 @@ export default function Admin() {
     }
   }
 
-  const addPicture = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const fileInput = (e.target as HTMLFormElement).querySelector('input[type="file"]') as HTMLInputElement
-    if (!fileInput.files?.[0]) return
-    
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      const url = e.target?.result as string
-      await fetch('/api/pictures', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, caption: newPicCaption })
-      })
-      setNewPicCaption('')
-      fileInput.value = ''
-      loadData()
-    }
-    reader.readAsDataURL(fileInput.files[0])
-  }
-
-  const addStory = async (e: React.FormEvent) => {
-    e.preventDefault()
-    await fetch('/api/stories', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newStory)
-    })
-    setNewStory({ author: '', title: '', content: '' })
-    loadData()
-  }
-
   if (!authenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-400 to-pink-600">
