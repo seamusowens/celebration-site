@@ -27,32 +27,16 @@ export async function POST(request: Request) {
   try {
     const { url, caption } = await request.json()
     const id = Date.now().toString()
+    const picture = { id, url, caption, createdAt: new Date().toISOString() }
     
-    // Upload base64 image to S3
-    const base64Data = url.replace(/^data:image\/\w+;base64,/, '')
-    const buffer = Buffer.from(base64Data, 'base64')
-    const key = `${id}.jpg`
-    
-    console.log('Uploading to S3:', key)
-    await s3.send(new PutObjectCommand({
-      Bucket: BUCKET,
-      Key: key,
-      Body: buffer,
-      ContentType: 'image/jpeg'
-    }))
-    console.log('S3 upload successful')
-    
-    const s3Url = `https://${BUCKET}.s3.amazonaws.com/${key}`
-    const picture = { id, url: s3Url, caption, createdAt: new Date().toISOString() }
-    
-    console.log('Saving to DynamoDB:', picture)
+    console.log('Saving picture metadata to DynamoDB:', picture)
     await dynamodb.send(new PutCommand({ TableName: TABLE, Item: picture }))
     console.log('DynamoDB save successful')
     
     return NextResponse.json(picture)
   } catch (error) {
-    console.error('Error uploading picture:', error)
-    return NextResponse.json({ error: 'Failed to upload picture', details: String(error) }, { status: 500 })
+    console.error('Error saving picture:', error)
+    return NextResponse.json({ error: String(error) }, { status: 500 })
   }
 }
 

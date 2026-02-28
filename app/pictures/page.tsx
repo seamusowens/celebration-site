@@ -16,31 +16,45 @@ export default function Pictures() {
     const fileInput = (e.target as HTMLFormElement).querySelector('input[type="file"]') as HTMLInputElement
     if (!fileInput.files?.[0]) return
     
-    const reader = new FileReader()
-    reader.onload = async (e) => {
-      try {
-        const url = e.target?.result as string
-        const response = await fetch('/api/pictures', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url, caption })
-        })
-        
-        if (response.ok) {
-          setCaption('')
-          fileInput.value = ''
-          const res = await fetch('/api/pictures')
-          const data = await res.json()
-          setPictures(data)
-          alert('Picture uploaded! 🎉')
-        } else {
-          alert('Upload failed')
-        }
-      } catch (err) {
-        alert('Error uploading picture')
+    try {
+      const file = fileInput.files[0]
+      
+      // Get presigned URL
+      const urlRes = await fetch('/api/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name })
+      })
+      const { uploadUrl, publicUrl } = await urlRes.json()
+      
+      // Upload directly to S3
+      await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': 'image/jpeg' }
+      })
+      
+      // Save metadata to DynamoDB
+      const response = await fetch('/api/pictures', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: publicUrl, caption })
+      })
+      
+      if (response.ok) {
+        setCaption('')
+        fileInput.value = ''
+        const res = await fetch('/api/pictures')
+        const data = await res.json()
+        setPictures(data)
+        alert('Picture uploaded! 🎉')
+      } else {
+        alert('Upload failed')
       }
+    } catch (err) {
+      console.error('Upload error:', err)
+      alert('Error uploading picture')
     }
-    reader.readAsDataURL(fileInput.files[0])
   }
   
   return (
