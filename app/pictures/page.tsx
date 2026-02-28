@@ -13,7 +13,7 @@ const dynamoClient = new DynamoDBClient({
 const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
 
 export default function Pictures() {
-  const [pictures, setPictures] = useState([])
+  const [pictures, setPictures] = useState<any[]>([])
   const [caption, setCaption] = useState('')
   
   useEffect(() => {
