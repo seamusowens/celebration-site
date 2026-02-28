@@ -6,10 +6,13 @@ const inMemoryPictures: any[] = []
 
 export async function GET() {
   try {
+    console.log('Fetching pictures from DynamoDB table:', TABLES.PICTURES)
     const { Items } = await dynamodb.send(new ScanCommand({ TableName: TABLES.PICTURES }))
+    console.log('DynamoDB returned items:', Items?.length || 0)
     return NextResponse.json(Items || [])
   } catch (error) {
     console.error('DynamoDB error, using in-memory:', error)
+    console.error('Error details:', JSON.stringify(error, null, 2))
     return NextResponse.json(inMemoryPictures)
   }
 }
@@ -20,9 +23,12 @@ export async function POST(request: Request) {
     const picture = { id: Date.now().toString(), url, caption, createdAt: new Date().toISOString() }
     
     try {
+      console.log('Saving picture to DynamoDB:', picture.id)
       await dynamodb.send(new PutCommand({ TableName: TABLES.PICTURES, Item: picture }))
+      console.log('Picture saved successfully')
     } catch (dbError) {
       console.error('DynamoDB error, using in-memory:', dbError)
+      console.error('Error details:', JSON.stringify(dbError, null, 2))
       inMemoryPictures.unshift(picture)
     }
     
