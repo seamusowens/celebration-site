@@ -42,10 +42,23 @@ export default function Admin() {
     e.preventDefault()
     if (password === 'admin123') {
       setAuthenticated(true)
+      localStorage.setItem('adminAuth', 'true')
     } else {
       alert('Incorrect password')
     }
   }
+
+  const handleLogout = () => {
+    setAuthenticated(false)
+    localStorage.removeItem('adminAuth')
+  }
+
+  useEffect(() => {
+    const isAuth = localStorage.getItem('adminAuth') === 'true'
+    if (isAuth) {
+      setAuthenticated(true)
+    }
+  }, [])
 
   const deletePicture = async (id: string) => {
     await fetch('/api/pictures', {
@@ -116,7 +129,10 @@ export default function Admin() {
   return (
     <div className="min-h-screen p-8 bg-gradient-to-br from-pink-400 to-pink-600">
       <div className="container mx-auto">
-        <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">Admin Dashboard</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-5xl font-black text-white text-center flex-1 drop-shadow-lg">Admin Dashboard</h1>
+          <button onClick={handleLogout} className="bg-white text-pink-600 px-4 py-2 rounded-xl font-bold hover:bg-gray-100">Logout</button>
+        </div>
         
         <div className="flex justify-center gap-4 mb-8">
           <button onClick={() => setTab('rsvps')} className={`px-6 py-3 rounded-2xl font-bold ${tab === 'rsvps' ? 'bg-white text-pink-600' : 'bg-pink-600 text-white'}`}>RSVPs</button>
