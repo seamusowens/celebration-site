@@ -1,5 +1,16 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb'
+
+const dynamoClient = new DynamoDBClient({
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!
+  }
+})
+const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
 
 export default function Events() {
   const [selectedEvent, setSelectedEvent] = useState('')
@@ -7,14 +18,19 @@ export default function Events() {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await fetch('/api/rsvps', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, event: selectedEvent })
-    })
-    setFormData({ name: '', email: '', attending: 1 })
-    setSelectedEvent('')
-    alert('RSVP submitted! 🎉')
+    try {
+      const id = Date.now().toString()
+      const rsvp = { id, ...formData, event: selectedEvent, createdAt: new Date().toISOString() }
+      
+      await dynamodb.send(new PutCommand({ TableName: 'celebration-rsvps', Item: rsvp }))
+      
+      setFormData({ name: '', email: '', attending: 1 })
+      setSelectedEvent('')
+      alert('RSVP submitted! 🎉')
+    } catch (err) {
+      console.error('Error submitting RSVP:', err)
+      alert('Error submitting RSVP')
+    }
   }
   
   return (
