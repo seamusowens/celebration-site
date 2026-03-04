@@ -48,21 +48,21 @@ export default function Events() {
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">St. Petersburg, Florida 🦩</h2>
-            <p className="text-xl mb-4">Date: TBD</p>
+            <p className="text-xl mb-4">Date: June 13, Details TBD</p>
             <button onClick={() => setSelectedEvent('stpete')} className="bg-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-700">RSVP for St. Pete</button>
           </div>
           
           <div className="fun-card p-6">
-            <h2 className="text-3xl font-bold text-pink-600 mb-4">South Bend, Indiana 🐵</h2>
-            <p className="text-xl mb-4">Date: TBD</p>
-            <button onClick={() => setSelectedEvent('southbend')} className="bg-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-700">RSVP for South Bend</button>
+            <h2 className="text-3xl font-bold text-pink-600 mb-4">Elkhart/Millersburg, Indiana 🐵</h2>
+            <p className="text-xl mb-4">Date: May 16, Details TBD</p>
+            <button onClick={() => setSelectedEvent('southbend')} className="bg-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-700">RSVP for Elkhart/Millersburg</button>
           </div>
         </div>
         
         {selectedEvent && (
           <div className="absolute bottom-8 left-8 right-8">
             <div className="fun-card p-4 max-w-full mx-auto">
-              <h3 className="text-2xl font-bold text-pink-600 mb-4 text-center">RSVP for {selectedEvent === 'stpete' ? 'St. Petersburg' : 'South Bend'}</h3>
+              <h3 className="text-2xl font-bold text-pink-600 mb-4 text-center">RSVP for {selectedEvent === 'stpete' ? 'St. Petersburg' : 'Elkhart/Millersburg'}</h3>
               <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-center justify-center">
                 <input type="text" placeholder="Your Name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
                 <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="flex-1 min-w-[150px] p-3 border-2 border-pink-300 rounded-2xl shadow-sm hover:shadow-md transition-all focus:border-pink-500 focus:outline-none" required/>
