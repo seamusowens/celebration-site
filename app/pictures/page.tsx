@@ -89,9 +89,9 @@ export default function Pictures() {
         <div className="bg-gray-900 p-8 pt-0">
           <div className="grid md:grid-cols-3 gap-6">
             {pictures.map((pic: any) => (
-              <div key={pic.id} className="fun-card p-4">
+              <div key={pic.id}>
                 <img src={pic.url} alt={pic.caption || ''} className="w-full h-64 object-cover rounded-lg mb-2"/>
-                {pic.caption && <p className="text-center font-bold">{pic.caption}</p>}
+                {pic.caption && <p className="text-center font-bold text-white">{pic.caption}</p>}
               </div>
             ))}
           </div>
