@@ -3,9 +3,21 @@ import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocumentClient, ScanCommand, PutCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
 
-const dynamoClient = new DynamoDBClient({ region: 'us-east-1' })
+const dynamoClient = new DynamoDBClient({ 
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID || process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY || process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY || ''
+  }
+})
 const dynamodb = DynamoDBDocumentClient.from(dynamoClient)
-const s3 = new S3Client({ region: 'us-east-1' })
+const s3 = new S3Client({ 
+  region: 'us-east-1',
+  credentials: {
+    accessKeyId: process.env.APP_AWS_ACCESS_KEY_ID || process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.APP_AWS_SECRET_ACCESS_KEY || process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY || ''
+  }
+})
 const BUCKET = 'celebration-site-pictures'
 const TABLE = process.env.DYNAMODB_PICTURES_TABLE || 'celebration-pictures'
 const inMemoryPictures: any[] = []
