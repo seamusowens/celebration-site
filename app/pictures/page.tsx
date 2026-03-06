@@ -36,25 +36,16 @@ export default function Pictures() {
     
     try {
       const file = fileInput.files[0]
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('caption', caption)
       
-      // Get presigned URL
-      const urlRes = await fetch('/api/upload-url', {
+      const res = await fetch('/api/pictures', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ filename: file.name })
-      })
-      const { uploadUrl, publicUrl, key } = await urlRes.json()
-      
-      // Upload to S3
-      await fetch(uploadUrl, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': file.type }
+        body: formData
       })
       
-      // Save metadata to DynamoDB
-      const picture = { id: key, url: publicUrl, caption, createdAt: new Date().toISOString() }
-      await dynamodb.send(new PutCommand({ TableName: 'celebration-pictures', Item: picture }))
+      if (!res.ok) throw new Error('Upload failed')
       
       setCaption('')
       fileInput.value = ''

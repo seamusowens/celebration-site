@@ -30,12 +30,37 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { url, caption } = await request.json()
-    const id = Date.now().toString()
-    const picture = { id, url, caption, createdAt: new Date().toISOString() }
+    const formData = await request.formData()
+    const file = formData.get('file') as File
+    const caption = formData.get('caption') as string
     
-    // Just return success - client will handle DynamoDB
-    return NextResponse.json(picture)
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    }
+
+    const key = `${Date.now()}-${file.name}`
+    const buffer = Buffer.from(await file.arrayBuffer())
+    
+    // Upload to S3
+    await s3.send(new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: buffer,
+      ContentType: file.type
+    }))
+    
+    const publicUrl = `https://${BUCKET}.s3.amazonaws.com/${key}`
+    
+    // Save to DynamoDB
+    const picture = { 
+      id: key, 
+      url: publicUrl, 
+      caption: caption || '', 
+      createdAt: new Date().toISOString() 
+    }
+    await dynamodb.send(new PutCommand({ TableName: TABLE, Item: picture }))
+    
+    return NextResponse.json({ success: true, picture })
   } catch (error) {
     console.error('Error saving picture:', error)
     return NextResponse.json({ error: String(error) }, { status: 500 })
