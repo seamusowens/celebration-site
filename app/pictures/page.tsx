@@ -36,19 +36,24 @@ export default function Pictures() {
     
     try {
       const file = fileInput.files[0]
-      const id = Date.now().toString()
-      const key = `${id}.jpg`
-      const s3Url = `https://celebration-site-pictures.s3.amazonaws.com/${key}`
       
-      // Upload directly to S3
-      await fetch(s3Url, {
+      // Get presigned URL
+      const urlRes = await fetch('/api/upload-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name })
+      })
+      const { uploadUrl, publicUrl, key } = await urlRes.json()
+      
+      // Upload to S3
+      await fetch(uploadUrl, {
         method: 'PUT',
         body: file,
         headers: { 'Content-Type': file.type }
       })
       
       // Save metadata to DynamoDB
-      const picture = { id, url: s3Url, caption, createdAt: new Date().toISOString() }
+      const picture = { id: key, url: publicUrl, caption, createdAt: new Date().toISOString() }
       await dynamodb.send(new PutCommand({ TableName: 'celebration-pictures', Item: picture }))
       
       setCaption('')
