@@ -45,6 +45,10 @@ export default function Events() {
         <div className="container mx-auto p-8">
         <h1 className="text-5xl font-black text-white text-center mb-8 drop-shadow-lg">🎉 Celebrations of Life 🎉</h1>
         
+        <div className="fun-card p-6 mb-8 text-center">
+          <p className="text-xl text-gray-800">In lieu of donations or flowers, please consider donating stuffed monkeys to your nearest children's hospital, or woman's shelter</p>
+        </div>
+        
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">St. Petersburg, Florida 🦩</h2>
