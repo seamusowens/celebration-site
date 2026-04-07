@@ -52,7 +52,12 @@ export default function Events() {
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">St. Petersburg, Florida 🦩</h2>
-            <p className="text-xl mb-4">Date: June 13, Details TBD</p>
+            <p className="text-xl font-bold mb-2">June 13 — Celebration of Life Charter 6-8 PM</p>
+            <p className="text-lg mb-1">Arrive early to allow for boarding</p>
+            <p className="text-lg font-semibold mb-1">Dolphin Pier Cruises</p>
+            <p className="text-lg mb-1">400 2nd AVE NE (close to Fresco&apos;s)</p>
+            <p className="text-lg mb-2">St Petersburg, FL</p>
+            <p className="text-md italic mb-4">Celebration may start and continue at a Bar/Restaurant close by, details to follow</p>
             <button onClick={() => setSelectedEvent('stpete')} className="bg-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-700">RSVP for St. Pete</button>
           </div>
           
