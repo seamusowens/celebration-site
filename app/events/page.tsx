@@ -57,13 +57,19 @@ export default function Events() {
             <p className="text-lg font-semibold mb-1">Dolphin Pier Cruises</p>
             <p className="text-lg mb-1">400 2nd AVE NE (close to Fresco&apos;s)</p>
             <p className="text-lg mb-2">St Petersburg, FL</p>
-            <p className="text-md italic mb-4">Celebration may start and continue at a Bar/Restaurant close by, details to follow</p>
+            <p className="text-lg font-bold mt-4 mb-1">RSVP by May 23</p>
+            <p className="text-lg mt-4 mb-1">After returning to land the Celebration will continue at:</p>
+            <p className="text-lg font-semibold mb-1">The Big Catch</p>
+            <p className="text-lg mb-4">1500 2nd Street South</p>
             <button onClick={() => setSelectedEvent('stpete')} className="bg-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-700">RSVP for St. Pete</button>
           </div>
           
           <div className="fun-card p-6">
             <h2 className="text-3xl font-bold text-pink-600 mb-4">Elkhart/Millersburg, Indiana 🐵</h2>
-            <p className="text-xl mb-4">Date: May 16, Details TBD</p>
+            <p className="text-xl font-bold mb-2">May 16 — 4-7 PM</p>
+            <p className="text-lg font-semibold mb-1">VFW Post 985</p>
+            <p className="text-lg mb-1">1201 West Pike</p>
+            <p className="text-lg mb-4">Goshen, IN 46526</p>
             <button onClick={() => setSelectedEvent('southbend')} className="bg-pink-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-pink-700">RSVP for Elkhart/Millersburg</button>
           </div>
         </div>
