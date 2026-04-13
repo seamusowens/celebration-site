@@ -65,7 +65,7 @@ export default function Events() {
           </div>
           
           <div className="fun-card p-6">
-            <h2 className="text-3xl font-bold text-pink-600 mb-4">Elkhart/Millersburg, Indiana 🐵</h2>
+            <h2 className="text-3xl font-bold text-pink-600 mb-4 whitespace-nowrap">Elkhart/Millersburg, Indiana 🐵</h2>
             <p className="text-xl font-bold mb-2">May 16 — 4-7 PM</p>
             <p className="text-lg font-semibold mb-1">VFW Post 985</p>
             <p className="text-lg mb-1">1201 West Pike</p>
